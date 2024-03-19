@@ -34,11 +34,12 @@ public class DexClientViewActivity extends Activity {
         GeckoView view = findViewById(R.id.geckoview);
         GeckoSession session = new GeckoSession();
 
-// Workaround for Bug 1758212
+        // Workaround for Bug 1758212
         session.setContentDelegate(new GeckoSession.ContentDelegate() {
         });
 
-        GeckoViewHelper gvHelper = new GeckoViewHelper();
+        DexCompanionApp application = (DexCompanionApp) getApplicationContext();
+        GeckoViewHelper gvHelper = application.getGeckoViewHelper();
         GeckoRuntime sRuntime = gvHelper.getGeckoRuntime(this);
 
         session.open(sRuntime);
@@ -47,7 +48,7 @@ public class DexClientViewActivity extends Activity {
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                tor is initialized, load page
+                // tor is initialized, load page
                 String status = intent.getStringExtra(TorService.EXTRA_STATUS);
                 Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
                 session.loadUri("http://kenphf64zothc4vl4wzsgt43jzroyoukd2zh75k5ho3bpydqzxkvpdad.onion/");

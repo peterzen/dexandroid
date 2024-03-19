@@ -14,11 +14,10 @@ import java.io.IOException;
 public class GeckoViewHelper {
 
     private static GeckoRuntime sRuntime;
+    private static final String TAG = "DCRDEX";
 
     public GeckoViewHelper() {
     }
-
-    private static final String TAG = "DCRDEX";
 
     private void writeGeckoRuntimeConfig(File filesDir) {
         File filePath = getGeckoConfigFile(filesDir);
