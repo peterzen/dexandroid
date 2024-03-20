@@ -48,9 +48,14 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
     }
 
     public void addItem(String URL) {
+        if (preferenceManager.containsUrl(URL)) {
+            Toast.makeText(context, "DEX client already exists", Toast.LENGTH_SHORT).show();
+            return;
+        }
         DexClient newItem = preferenceManager.addDexClientFromURL(URL);
         list.add(newItem);
         notifyItemInserted(list.size() - 1);
+        Toast.makeText(context, "Paired DEX: " + URL, Toast.LENGTH_LONG).show();
     }
 
     public void removeItem(int position) {
@@ -98,6 +103,4 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
     public ItemViewHolder getViewHolder() {
         return currentViewHolder;
     }
-
-
 }

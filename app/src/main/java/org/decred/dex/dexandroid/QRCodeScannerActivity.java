@@ -57,7 +57,6 @@ public class QRCodeScannerActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("newClientURL", clientURL.trim());
                 setResult(RESULT_OK, intent);
-                Toast.makeText(this, "Paired DEX: " + clientURL, Toast.LENGTH_LONG).show();
             }
             finish();
         } else {

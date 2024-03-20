@@ -38,16 +38,26 @@ public class PreferenceManager {
         return newItem;
     }
 
+    public void removeDexClient(DexClient item) {
+        List<DexClient> clientList = getDexClientList();
+        clientList.remove(item);
+        saveDexClientList(clientList);
+    }
+
+    public Boolean containsUrl(String url) {
+        List<DexClient> clientList = getDexClientList();
+        for (DexClient client : clientList) {
+            if (client.getUrl().equals(url)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<DexClient> getDexClientList() {
         String json = sharedPreferences.getString(DEX_CLIENT_LIST_KEY, "[]");
         Type type = new TypeToken<ArrayList<DexClient>>() {
         }.getType();
         return gson.fromJson(json, type);
-    }
-
-    public void removeDexClient(DexClient item) {
-        List<DexClient> clientList = getDexClientList();
-        clientList.remove(item);
-        saveDexClientList(clientList);
     }
 }

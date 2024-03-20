@@ -37,7 +37,7 @@ public class DexClient implements Serializable {
             return false;
         }
         DexClient dexClient = (DexClient) obj;
-        return id.equals(dexClient.id);
+        return url.equals(dexClient.url);
     }
 
 }
