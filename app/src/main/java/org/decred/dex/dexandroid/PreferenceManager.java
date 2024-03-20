@@ -9,13 +9,14 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PreferenceManager {
     private static final String PREFERENCES_NAME = "settings";
     private static final String DEX_CLIENT_LIST_KEY = "dex_client_list";
 
-    private SharedPreferences sharedPreferences;
-    private Gson gson;
+    private final SharedPreferences sharedPreferences;
+    private final Gson gson;
 
     public PreferenceManager(Context context) {
         sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -29,15 +30,24 @@ public class PreferenceManager {
         editor.apply();
     }
 
-    public void addDexClient(DexClient client){
+    public DexClient addDexClientFromURL(String URL) {
+        DexClient newItem = DexClient.newDexClientFromURL(URL);
         List<DexClient> clientList = getDexClientList();
-        clientList.add(client);
+        clientList.add(newItem);
         saveDexClientList(clientList);
+        return newItem;
     }
 
     public List<DexClient> getDexClientList() {
-        String json = sharedPreferences.getString(DEX_CLIENT_LIST_KEY, null);
-        Type type = new TypeToken<ArrayList<DexClient>>() {}.getType();
+        String json = sharedPreferences.getString(DEX_CLIENT_LIST_KEY, "[]");
+        Type type = new TypeToken<ArrayList<DexClient>>() {
+        }.getType();
         return gson.fromJson(json, type);
+    }
+
+    public void removeDexClient(DexClient item) {
+        List<DexClient> clientList = getDexClientList();
+        clientList.remove(item);
+        saveDexClientList(clientList);
     }
 }

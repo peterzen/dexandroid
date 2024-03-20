@@ -1,40 +1,43 @@
 package org.decred.dex.dexandroid;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
+import java.util.UUID;
 
 public class DexClient implements Serializable {
 
-    private String clientName;
-    private String clientUrl;
-    private String authCookie;
+    private final String id;
+    private final String url;
 
-    public DexClient(String clientName, String clientUrl, String authCookie) {
-        this.clientName = clientName;
-        this.clientUrl = clientUrl;
-        this.authCookie = authCookie;
+    public DexClient(String id, String URL) {
+        this.id = id;
+        this.url = URL;
     }
 
-    public String getClientName() {
-        return clientName;
+    public String getUrl() {
+        return url;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public String getId(){
+        return this.id;
     }
 
-    public String getClientUrl() {
-        return clientUrl;
+    public static DexClient newDexClientFromURL(String URL){
+        String id = UUID.randomUUID().toString();
+        return new DexClient(id, URL);
     }
 
-    public void setClientUrl(String clientUrl) {
-        this.clientUrl = clientUrl;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        DexClient dexClient = (DexClient) obj;
+        return id.equals(dexClient.id);
     }
 
-    public String getAuthCookie() {
-        return authCookie;
-    }
-
-    public void setAuthCookie(String authCookie) {
-        this.authCookie = authCookie;
-    }
 }

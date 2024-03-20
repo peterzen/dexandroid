@@ -1,19 +1,21 @@
 package org.decred.dex.dexandroid;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // DEX client chooser list view
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
         // floating action button for pairing a new DEX client
@@ -31,21 +33,39 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         PreferenceManager preferenceManager = new PreferenceManager(this);
-        List<DexClient> dexClients = preferenceManager.getDexClientList();
-        RecyclerView.Adapter<DexClientChooserAdapter.MyViewHolder> mAdapter = new DexClientChooserAdapter(this, dexClients);
+        DexClientChooserAdapter mAdapter = new DexClientChooserAdapter(this, preferenceManager);
         recyclerView.setAdapter(mAdapter);
+
+        ActivityResultLauncher<Void> launcher = registerForActivityResult(new QRCodeScannerContract(), new ActivityResultCallback<String>() {
+            @Override
+            public void onActivityResult(String newClientURL) {
+                if (!newClientURL.isEmpty()) {
+                    mAdapter.addItem(newClientURL);
+                }
+            }
+        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Pair new DEX", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, QRCodeScannerActivity.class);
-                startActivity(intent);
-
-//                List<DexClient> dexClientList = new ArrayList<>();
-//                dexClientList.add(new DexClient("dex1", "http://kenphf64zothc4vl4wzsgt43jzroyoukd2zh75k5ho3bpydqzxkvpdad.onion", "cookie_value"));
-//                preferenceManager.saveDexClientList(dexClientList);
+                launcher.launch(null);
             }
         });
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.delete) {
+            RecyclerView.ViewHolder viewHolder = ((DexClientChooserAdapter) recyclerView.getAdapter()).getViewHolder();
+            int position = viewHolder.getAbsoluteAdapterPosition();
+            if (position < 0) {
+                // FIXME this shouldn't occur but it can be -1 when deleting the last item in the list.
+                return false;
+            }
+            ((DexClientChooserAdapter) recyclerView.getAdapter()).removeItem(position);
+            return true;
+        }
+        return super.onContextItemSelected(item);
     }
 }

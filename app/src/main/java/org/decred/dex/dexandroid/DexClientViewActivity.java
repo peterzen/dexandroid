@@ -45,13 +45,20 @@ public class DexClientViewActivity extends Activity {
         session.open(sRuntime);
         view.setSession(session);
 
+        DexClient dexHost = getIntent().getSerializableExtra("dexHost", DexClient.class);
+        if(dexHost == null){
+            Log.e(TAG, "Invalid DEX host: (null)");
+            finish();
+            return;
+        }
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 // tor is initialized, load page
                 String status = intent.getStringExtra(TorService.EXTRA_STATUS);
                 Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
-                session.loadUri("http://kenphf64zothc4vl4wzsgt43jzroyoukd2zh75k5ho3bpydqzxkvpdad.onion/");
+                String uri = dexHost.getUrl();
+                session.loadUri(uri);
             }
         }, new IntentFilter(TorService.ACTION_STATUS), Context.RECEIVER_NOT_EXPORTED);
 
