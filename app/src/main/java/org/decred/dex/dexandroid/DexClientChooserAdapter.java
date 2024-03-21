@@ -76,20 +76,15 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         currentViewHolder = holder;
         DexClient item = list.get(position);
         holder.textView.setText(item.getUrl());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, DexClientViewActivity.class);
-                intent.putExtra("dexHost", item);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DexClientViewActivity.class);
+            intent.putExtra("dexHost", item);
+            context.startActivity(intent);
         });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                v.showContextMenu();
-                return true;
-            }
+
+        holder.itemView.setOnLongClickListener(v -> {
+            v.showContextMenu();
+            return true;
         });
     }
 
