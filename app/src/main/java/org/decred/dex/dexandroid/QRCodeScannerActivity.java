@@ -33,8 +33,8 @@ public class QRCodeScannerActivity extends AppCompatActivity {
         // TODO deprecated - rewrite this
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.setOrientationLocked(true);
-        integrator.setPrompt("Scan a QR code");
+        integrator.setOrientationLocked(false);
+        integrator.setPrompt("Scan QR code in DEX Settings");
         integrator.initiateScan();
     }
 
