@@ -40,7 +40,6 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         }
     }
 
-
     public DexClientChooserAdapter(Context context, PreferenceManager preferenceManager) {
         this.context = context;
         this.preferenceManager = preferenceManager;
@@ -80,7 +79,6 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Clicked on item: " + item.getUrl(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, DexClientViewActivity.class);
                 intent.putExtra("dexHost", item);
                 context.startActivity(intent);
