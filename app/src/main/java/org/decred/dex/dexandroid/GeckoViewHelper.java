@@ -135,10 +135,10 @@ public class GeckoViewHelper {
     private GeckoRuntimeSettings.Builder createSettingsBuilder(File filesDir) {
         GeckoRuntimeSettings.Builder sb = new GeckoRuntimeSettings.Builder();
         if (BuildConfig.DEBUG) {
-            sb.debugLogging(true);
-            sb.remoteDebuggingEnabled(true);
-            sb.consoleOutput(true);
-            sb.aboutConfigEnabled(true);
+            sb.debugLogging(true)
+                    .remoteDebuggingEnabled(true)
+                    .consoleOutput(true)
+                    .aboutConfigEnabled(true);
         }
         String gvConfigPath = this.getGeckoConfigFile(filesDir).getAbsolutePath();
         Log.i(TAG, "loading geckoView config from " + gvConfigPath);

@@ -15,6 +15,9 @@ gson = "2.10.1"
 torAndroid = "0.4.7.14"
 zxingAndroidEmbedded = "4.3.0"
 core = "3.5.3"
+http = "20070405"
+robolectric = "4.11.1"
+javaxWsRsApi = "2.1.1"
 
 [libraries]
 jtorctl = { module = "info.guardianproject:jtorctl", version.ref = "jtorctl" }
@@ -32,6 +35,9 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 tor-android = { module = "info.guardianproject:tor-android", version.ref = "torAndroid" }
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 core = { group = "com.google.zxing", name = "core", version.ref = "core" }
+http = { group = "com.sun.net.httpserver", name = "http", version.ref = "http" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+javax-ws-rs-api = { group = "javax.ws.rs", name = "javax.ws.rs-api", version.ref = "javaxWsRsApi" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
