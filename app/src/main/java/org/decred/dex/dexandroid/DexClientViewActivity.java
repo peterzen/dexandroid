@@ -15,18 +15,22 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoRuntime;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoView;
+import org.mozilla.geckoview.WebRequestError;
 import org.torproject.jni.TorService;
 
 
 public class DexClientViewActivity extends Activity {
     private static final String TAG = "DCRDEX";
-
     private String dexURI = null;
+    private ServiceConnection conn;
+    private BroadcastReceiver broadcastReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -51,7 +55,17 @@ public class DexClientViewActivity extends Activity {
         GeckoRuntime sRuntime = gvHelper.getGeckoRuntime(this);
 
         session.open(sRuntime);
-        geckoView.setSession(session);
+
+        session.setNavigationDelegate(new GeckoSession.NavigationDelegate() {
+            @Override
+            public GeckoResult<String> onLoadError(@NonNull GeckoSession session, String uri, @NonNull WebRequestError error) {
+                // Error occurred while trying to load a URI
+                unbindService(conn);
+                unregisterReceiver(broadcastReceiver);
+                errorActivity("Unable to connect to DEX client");
+                return null;
+            }
+        });
 
         DexClient dexHost = getIntent().getSerializableExtra("dexHost", DexClient.class);
         if (dexHost == null) {
@@ -59,28 +73,31 @@ public class DexClientViewActivity extends Activity {
             finish();
             return;
         }
-
         dexURI = gvHelper.getDexURI(dexHost);
 
-        registerReceiver(new BroadcastReceiver() {
+        geckoView.setSession(session);
+
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String status = intent.getStringExtra(TorService.EXTRA_STATUS);
 
                 progressBar.incrementProgressBy(10);
 
-                // onReceive fires twice.  Tor is ready when status is "ON"
-                if (status == null || !status.equals("ON")) {
+                // onReceive fires twice.  Tor is ready when status is ON
+                if (status == null || !status.equals(TorService.STATUS_ON)) {
                     return;
                 }
 
-                Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Connected to Tor network", Toast.LENGTH_SHORT).show();
                 gvHelper.setProgressBar(session, progressBar);
                 session.loadUri(dexURI);
             }
-        }, new IntentFilter(TorService.ACTION_STATUS), Context.RECEIVER_NOT_EXPORTED);
+        };
 
-        bindService(new Intent(this, TorService.class), new ServiceConnection() {
+        registerReceiver(broadcastReceiver, new IntentFilter(TorService.ACTION_STATUS), Context.RECEIVER_NOT_EXPORTED);
+
+        conn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 TorService torService = ((TorService.LocalBinder) service).getService();
@@ -89,7 +106,7 @@ public class DexClientViewActivity extends Activity {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         Log.e(TAG, "InterruptedException: " + e);
-                        Toast.makeText(DexClientViewActivity.this, "Tor control connection failed", Toast.LENGTH_LONG).show();
+                        errorActivity("Tor control connection failed");
                     }
                 }
                 progressBar.incrementProgressBy(10);
@@ -99,8 +116,17 @@ public class DexClientViewActivity extends Activity {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 Log.i(TAG, "onServiceDisconnected: " + name.toString());
+                errorActivity("Tor service disconnected");
             }
+        };
 
-        }, BIND_AUTO_CREATE);
+        bindService(new Intent(this, TorService.class), conn, Context.BIND_AUTO_CREATE);
+    }
+
+    // errorActivity navigates back to MainActivity and sends a displayable error message
+    private void errorActivity(String errorStr) {
+        Intent intent = new Intent(DexClientViewActivity.this, MainActivity.class);
+        intent.putExtra("error", errorStr);
+        startActivity(intent);
     }
 }
