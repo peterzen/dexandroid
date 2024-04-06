@@ -27,8 +27,9 @@ import org.torproject.jni.TorService;
 
 
 public class DexClientViewActivity extends Activity {
-    private static final String TAG = "DCRDEX";
+
     private ServiceConnection conn;
+
     private BroadcastReceiver broadcastReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -68,7 +69,7 @@ public class DexClientViewActivity extends Activity {
 
         DexClient dexHost = getIntent().getSerializableExtra("dexHost", DexClient.class);
         if (dexHost == null) {
-            Log.e(TAG, "Invalid DEX host: (null)");
+            Log.e(DexCompanionApp.LOG_TAG, "Invalid DEX host: (null)");
             finish();
             return;
         }
@@ -102,7 +103,7 @@ public class DexClientViewActivity extends Activity {
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
-                        Log.e(TAG, "InterruptedException: " + e);
+                        Log.e(DexCompanionApp.LOG_TAG, "InterruptedException: " + e);
                         errorActivity("Tor control connection failed");
                     }
                 }
@@ -112,7 +113,7 @@ public class DexClientViewActivity extends Activity {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.i(TAG, "onServiceDisconnected: " + name.toString());
+                Log.i(DexCompanionApp.LOG_TAG, "onServiceDisconnected: " + name.toString());
                 errorActivity("Tor service disconnected");
             }
         };

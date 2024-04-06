@@ -16,4 +16,6 @@ public class DexCompanionApp extends Application {
     public GeckoViewHelper getGeckoViewHelper() {
         return geckoViewHelper;
     }
+
+    public static final String LOG_TAG = "DCRDEX";
 }

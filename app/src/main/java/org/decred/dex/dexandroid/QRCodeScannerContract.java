@@ -19,7 +19,6 @@ public class QRCodeScannerContract extends ActivityResultContract<Void, String> 
     public String parseResult(int resultCode, @Nullable Intent intent) {
         if (resultCode == Activity.RESULT_OK && intent != null) {
             return intent.getStringExtra("newClientURL");
-//            return (DexClient) intent.getSerializableExtra("newClientURL");
         } else {
             return null;
         }

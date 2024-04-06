@@ -17,7 +17,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private static final String TAG = "DCRDEX";
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -25,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // floating action button for pairing a new DEX client
+        FloatingActionButton fab = findViewById(R.id.fab);
+
         // DEX client chooser list view
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-
-        // floating action button for pairing a new DEX client
-        FloatingActionButton fab = findViewById(R.id.fab);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         // If we were sent back to the main activity due to an error loading a page, display error message
         String errorStr = getIntent().getStringExtra("error");
         if (errorStr != null) {
-            Log.e(TAG, "LoadError: " + errorStr);
+            Log.e(DexCompanionApp.LOG_TAG, "LoadError: " + errorStr);
             Toast.makeText(MainActivity.this, errorStr, Toast.LENGTH_SHORT).show();
         }
 

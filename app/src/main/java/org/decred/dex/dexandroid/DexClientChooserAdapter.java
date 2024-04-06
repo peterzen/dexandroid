@@ -18,12 +18,14 @@ import android.content.Context;
 import android.widget.Toast;
 
 public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChooserAdapter.ItemViewHolder> {
+
     private final PreferenceManager preferenceManager;
+
     private final List<DexClient> list;
+
     private final Context context;
 
     private ItemViewHolder currentViewHolder;
-
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         public TextView textView;
@@ -46,15 +48,15 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         this.list = preferenceManager.getDexClientList();
     }
 
-    public void addItem(String URL) {
-        if (preferenceManager.containsUrl(URL)) {
+    public void addItem(String url) {
+        if (preferenceManager.containsUrl(url)) {
             Toast.makeText(context, "DEX client already exists", Toast.LENGTH_SHORT).show();
             return;
         }
-        DexClient newItem = preferenceManager.addDexClientFromURL(URL);
+        DexClient newItem = preferenceManager.addDexClientFromURL(url);
         list.add(newItem);
         notifyItemInserted(list.size() - 1);
-        Toast.makeText(context, "Paired DEX: " + URL, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Paired DEX: " + url, Toast.LENGTH_LONG).show();
     }
 
     public void removeItem(int position) {

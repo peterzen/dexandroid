@@ -9,10 +9,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PreferenceManager {
     private static final String PREFERENCES_NAME = "settings";
+
     private static final String DEX_CLIENT_LIST_KEY = "dex_client_list";
 
     private final SharedPreferences sharedPreferences;
@@ -30,8 +30,8 @@ public class PreferenceManager {
         editor.apply();
     }
 
-    public DexClient addDexClientFromURL(String URL) {
-        DexClient newItem = DexClient.newDexClientFromURL(URL);
+    public DexClient addDexClientFromURL(String url) {
+        DexClient newItem = DexClient.newDexClientFromURL(url);
         List<DexClient> clientList = getDexClientList();
         clientList.add(newItem);
         saveDexClientList(clientList);

@@ -19,13 +19,12 @@ import java.io.IOException;
 public class GeckoViewHelper {
 
     private static GeckoRuntime sRuntime;
-    private static final String TAG = "DCRDEX";
 
     public GeckoViewHelper() {
     }
 
     private void writeGeckoRuntimeConfig(File filesDir) {
-        File filePath = getGeckoConfigFile(filesDir);
+        File filePath = getGeckoConfigFilePath(filesDir);
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(filePath);
@@ -40,19 +39,19 @@ public class GeckoViewHelper {
                                     """;
             outputStream.write(gvRuntimeConfigTemplate.getBytes());
         } catch (Exception e) {
-            Log.e(TAG, "Unable to create GeckoRuntime config file: " + e);
+            Log.e(DexCompanionApp.LOG_TAG, "Unable to create GeckoRuntime config file: " + e);
         } finally {
             if (outputStream != null) {
                 try {
                     outputStream.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "Error closing GeckoRuntime config file: " + e);
+                    Log.e(DexCompanionApp.LOG_TAG, "Error closing GeckoRuntime config file: " + e);
                 }
             }
         }
     }
 
-    private File getGeckoConfigFile(File filesDir) {
+    private File getGeckoConfigFilePath(File filesDir) {
         return new File(filesDir, "gecko-config.yaml");
     }
 
@@ -73,7 +72,6 @@ public class GeckoViewHelper {
 
     private Boolean isAboutBlankLoading = false;
     private Boolean isAboutBlankLoaded = false;
-
     private int initialProgress;
 
     // setProgressBar attaches a ProgressBar to a GeckoSession
@@ -98,7 +96,7 @@ public class GeckoViewHelper {
                     return;
                 }
                 // The page has finished loading, set progress to 100% and hide the progress bar
-                Log.i(TAG, "Page loading finished. Success: " + success);
+                Log.i(DexCompanionApp.LOG_TAG, "Page loading finished. Success: " + success);
                 progressBar.setProgress(100, true);
                 progressBar.setVisibility(View.GONE);
             }
@@ -128,8 +126,8 @@ public class GeckoViewHelper {
             sb.consoleOutput(true);
             sb.aboutConfigEnabled(true);
         }
-        String gvConfigPath = this.getGeckoConfigFile(filesDir).getAbsolutePath();
-        Log.i(TAG, "loading geckoView config from " + gvConfigPath);
+        String gvConfigPath = this.getGeckoConfigFilePath(filesDir).getAbsolutePath();
+        Log.i(DexCompanionApp.LOG_TAG, "loading geckoView config from " + gvConfigPath);
         sb.configFilePath(gvConfigPath);
         sb.javaScriptEnabled(true);
         return sb;
