@@ -120,18 +120,6 @@ public class GeckoViewHelper {
         return (int) Math.round(pct * 100);
     }
 
-    // getDexURI returns the URL of the DEX host.  In the preferences the root URL is being stored,
-    // which will be modified here to point to the login page.  This is done to avoid an extra redirect
-    // roundtrip which adds a couple seconds of delay on a slow network.
-    public String getDexURI(DexClient dexHost) {
-        String dexURI = dexHost.getUrl();
-        // Ensure the URL ends with a trailing slash in order to save an extra redirect
-        if (!dexURI.endsWith("/")) {
-            dexURI += "/login";
-        }
-        return dexURI;
-    }
-
     private GeckoRuntimeSettings.Builder createSettingsBuilder(File filesDir) {
         GeckoRuntimeSettings.Builder sb = new GeckoRuntimeSettings.Builder();
         if (BuildConfig.DEBUG) {

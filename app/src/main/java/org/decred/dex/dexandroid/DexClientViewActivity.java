@@ -28,7 +28,6 @@ import org.torproject.jni.TorService;
 
 public class DexClientViewActivity extends Activity {
     private static final String TAG = "DCRDEX";
-    private String dexURI = null;
     private ServiceConnection conn;
     private BroadcastReceiver broadcastReceiver;
 
@@ -73,8 +72,6 @@ public class DexClientViewActivity extends Activity {
             finish();
             return;
         }
-        dexURI = gvHelper.getDexURI(dexHost);
-
         geckoView.setSession(session);
 
         broadcastReceiver = new BroadcastReceiver() {
@@ -91,7 +88,7 @@ public class DexClientViewActivity extends Activity {
 
                 Toast.makeText(context, "Connected to Tor network", Toast.LENGTH_SHORT).show();
                 gvHelper.setProgressBar(session, progressBar);
-                session.loadUri(dexURI);
+                session.loadUri(dexHost.getUrl());
             }
         };
 
