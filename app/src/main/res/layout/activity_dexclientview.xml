@@ -15,11 +15,17 @@
         android:indeterminate="false"
         android:max="100" />
 
-    <org.mozilla.geckoview.GeckoView
-        android:id="@+id/geckoview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/backgroundBlue" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <org.mozilla.geckoview.GeckoView
+            android:id="@+id/geckoview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/backgroundBlue" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
 

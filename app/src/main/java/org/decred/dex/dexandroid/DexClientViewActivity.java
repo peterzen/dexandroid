@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoRuntime;
@@ -32,6 +33,9 @@ public class DexClientViewActivity extends Activity {
 
     private BroadcastReceiver broadcastReceiver;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,12 @@ public class DexClientViewActivity extends Activity {
         ProgressBar progressBar = findViewById(R.id.progressBar);
 
         GeckoSession session = new GeckoSession();
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            session.reload();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         // Workaround for Bug 1758212
         session.setContentDelegate(new GeckoSession.ContentDelegate() {
