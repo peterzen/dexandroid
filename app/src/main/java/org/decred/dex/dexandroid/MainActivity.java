@@ -51,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fab.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Pair new DEX", Toast.LENGTH_SHORT).show();
-            launcher.launch(null);
-        });
+        fab.setOnClickListener(view -> launcher.launch(null));
     }
 
     @Override
