@@ -23,9 +23,9 @@ public class GeckoViewHelper {
     public GeckoViewHelper() {
     }
 
-    private void writeGeckoRuntimeConfig(File filesDir) {
+    private void writeGeckoRuntimeConfig(File filesDir) throws Exception {
         File filePath = getGeckoConfigFilePath(filesDir);
-        FileOutputStream outputStream = null;
+        FileOutputStream outputStream;
         try {
             outputStream = new FileOutputStream(filePath);
             String gvRuntimeConfigTemplate = """
@@ -40,14 +40,13 @@ public class GeckoViewHelper {
             outputStream.write(gvRuntimeConfigTemplate.getBytes());
         } catch (Exception e) {
             Log.e(DexCompanionApp.LOG_TAG, "Unable to create GeckoRuntime config file: " + e);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    Log.e(DexCompanionApp.LOG_TAG, "Error closing GeckoRuntime config file: " + e);
-                }
-            }
+            throw new Exception("GeckoView initialization error");
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            Log.e(DexCompanionApp.LOG_TAG, "Error closing GeckoRuntime config file: " + e);
+            throw new Exception("GeckoView initialization error");
         }
     }
 
@@ -55,14 +54,13 @@ public class GeckoViewHelper {
         return new File(filesDir, "gecko-config.yaml");
     }
 
-    public GeckoRuntime getGeckoRuntime(Activity activity) {
+    public GeckoRuntime getGeckoRuntime(Activity activity) throws Exception {
         // GeckoRuntime can only be initialized once per process
         if (sRuntime != null) {
             sRuntime.attachTo(activity);
             return sRuntime;
         }
         File filesDir = activity.getFilesDir();
-        // TODO add error handling.  writeGeckoRuntimeConfig() must throw an exception in case of error
         this.writeGeckoRuntimeConfig(filesDir);
         GeckoRuntimeSettings.Builder sb = this.createSettingsBuilder(filesDir);
         GeckoRuntimeSettings settings = sb.build();

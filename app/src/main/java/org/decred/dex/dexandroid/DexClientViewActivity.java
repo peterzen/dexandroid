@@ -62,7 +62,13 @@ public class DexClientViewActivity extends Activity {
 
         DexCompanionApp application = (DexCompanionApp) getApplicationContext();
         GeckoViewHelper gvHelper = application.getGeckoViewHelper();
-        GeckoRuntime sRuntime = gvHelper.getGeckoRuntime(this);
+        GeckoRuntime sRuntime;
+        try {
+            sRuntime = gvHelper.getGeckoRuntime(this);
+        } catch (Exception e) {
+            errorActivity(e.toString());
+            return;
+        }
 
         session.open(sRuntime);
 
