@@ -1,30 +1,31 @@
 package org.decred.dex.dexandroid;
 
 import java.io.Serializable;
-import java.util.UUID;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 // DexClient is a model representing a DEX host the application can connect to.
 public class DexClient implements Serializable {
 
-    private final String id;
+    private final String name;
     private final String url;
 
-    public DexClient(String id, String url) {
-        this.id = id;
+    public DexClient(String url, String name) {
         this.url = url;
+        this.name = name;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public String getId(){
-        return this.id;
+    public String getName() {
+        return name;
     }
 
-    public static DexClient newDexClientFromURL(String url){
-        String id = UUID.randomUUID().toString();
-        return new DexClient(id, url);
+    public static DexClient newDexClientFromURL(String url) {
+        String name = DexClient.convertUrlToName(url);
+        return new DexClient(url, name);
     }
 
     @Override
@@ -39,4 +40,12 @@ public class DexClient implements Serializable {
         return url.equals(dexClient.url);
     }
 
+    private static String convertUrlToName(String url) {
+        try {
+            URL urlObj = new URL(url);
+            return urlObj.getHost();
+        } catch (MalformedURLException e) {
+            return url;
+        }
+    }
 }

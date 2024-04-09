@@ -47,7 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityResultLauncher<Void> launcher = registerForActivityResult(new QRCodeScannerContract(), newClientURL -> {
             if (!newClientURL.isEmpty()) {
-                mAdapter.addItem(newClientURL);
+
+                DexClient newItem;
+
+                try {
+                    newItem = mAdapter.addItem(newClientURL);
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, "DEX client already exists", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(MainActivity.this, "Paired DEX: " + newItem.getName(), Toast.LENGTH_LONG).show();
             }
         });
 

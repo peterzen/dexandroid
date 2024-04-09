@@ -1,6 +1,7 @@
 package org.decred.dex.dexandroid;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -13,9 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
-import android.content.Context;
-import android.widget.Toast;
 
 public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChooserAdapter.ItemViewHolder> {
 
@@ -48,15 +46,14 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         this.list = preferenceManager.getDexClientList();
     }
 
-    public void addItem(String url) {
+    public DexClient addItem(String url) throws Exception {
         if (preferenceManager.containsUrl(url)) {
-            Toast.makeText(context, "DEX client already exists", Toast.LENGTH_SHORT).show();
-            return;
+            throw new Exception("DEX client already exists");
         }
         DexClient newItem = preferenceManager.addDexClientFromURL(url);
         list.add(newItem);
         notifyItemInserted(list.size() - 1);
-        Toast.makeText(context, "Paired DEX: " + url, Toast.LENGTH_LONG).show();
+        return newItem;
     }
 
     public void removeItem(int position) {
@@ -77,7 +74,7 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
     public void onBindViewHolder(ItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
         currentViewHolder = holder;
         DexClient item = list.get(position);
-        holder.textView.setText(item.getUrl());
+        holder.textView.setText(item.getName());
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DexClientViewActivity.class);
             intent.putExtra("dexHost", item);

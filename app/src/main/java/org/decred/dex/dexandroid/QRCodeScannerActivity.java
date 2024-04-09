@@ -183,7 +183,8 @@ public class QRCodeScannerActivity extends AppCompatActivity {
 
     private void onSuccessListener(List<Barcode> barcodes) {
         if (!barcodes.isEmpty()) {
-            String clientURL = barcodes.get(0).getDisplayValue();
+            Barcode barcode = barcodes.get(0);
+            String clientURL = barcode.getDisplayValue();
 
             if (clientURL == null) {
                 Toast.makeText(this, "Invalid URL", Toast.LENGTH_LONG).show();
@@ -199,9 +200,6 @@ public class QRCodeScannerActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.putExtra("newClientURL", clientURL.trim());
             setResult(RESULT_OK, intent);
-
-            Toast.makeText(this, barcodes.get(0).getDisplayValue(), Toast.LENGTH_SHORT)
-                    .show();
             finish();
         }
     }
