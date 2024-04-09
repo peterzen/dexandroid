@@ -74,7 +74,7 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
     public void onBindViewHolder(ItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
         currentViewHolder = holder;
         DexClient item = list.get(position);
-        holder.textView.setText(item.getName());
+        holder.textView.setText(item.name());
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DexClientViewActivity.class);
             intent.putExtra("dexHost", item);

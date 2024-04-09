@@ -47,7 +47,7 @@ public class PreferenceManager {
     public Boolean containsUrl(String url) {
         List<DexClient> clientList = getDexClientList();
         for (DexClient client : clientList) {
-            if (client.getUrl().equals(url)) {
+            if (client.url().equals(url)) {
                 return true;
             }
         }

@@ -5,23 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 // DexClient is a model representing a DEX host the application can connect to.
-public class DexClient implements Serializable {
-
-    private final String name;
-    private final String url;
-
-    public DexClient(String url, String name) {
-        this.url = url;
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getName() {
-        return name;
-    }
+public record DexClient(String url, String name) implements Serializable {
 
     public static DexClient newDexClientFromURL(String url) {
         String name = DexClient.convertUrlToName(url);

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "DEX client already exists", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(MainActivity.this, "Paired DEX: " + newItem.getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Paired DEX: " + newItem.name(), Toast.LENGTH_LONG).show();
             }
         });
 

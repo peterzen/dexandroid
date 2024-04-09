@@ -99,7 +99,7 @@ public class DexClientViewActivity extends Activity {
 
                 Toast.makeText(context, "Connected to Tor network", Toast.LENGTH_SHORT).show();
                 gvHelper.setProgressBar(session, progressBar);
-                session.loadUri(dexHost.getUrl());
+                session.loadUri(dexHost.url());
             }
         };
 
