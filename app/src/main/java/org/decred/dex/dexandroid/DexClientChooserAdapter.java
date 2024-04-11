@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
     private final Context context;
 
     private ItemViewHolder currentViewHolder;
+
+    private boolean isConnected;
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         public TextView textView;
@@ -40,10 +43,17 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         }
     }
 
-    public DexClientChooserAdapter(Context context, PreferenceManager preferenceManager) {
+    public DexClientChooserAdapter(Context context, PreferenceManager preferenceManager, boolean isConnected) {
         this.context = context;
         this.preferenceManager = preferenceManager;
         this.list = preferenceManager.getDexClientList();
+        this.isConnected = isConnected;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setConnected(boolean isConnected) { // Add this method
+        this.isConnected = isConnected;
+        notifyDataSetChanged();
     }
 
     public DexClient addItem(String url) throws Exception {
@@ -75,11 +85,18 @@ public class DexClientChooserAdapter extends RecyclerView.Adapter<DexClientChoos
         currentViewHolder = holder;
         DexClient item = list.get(position);
         holder.textView.setText(item.name());
-        holder.itemView.setOnClickListener(v -> {
+
+        if (isConnected) {
+            holder.textView.setTextColor(ContextCompat.getColor(context, R.color.textPrimary));
+        } else {
+            holder.textView.setTextColor(ContextCompat.getColor(context, R.color.textDisabled));
+        }
+
+        holder.itemView.setOnClickListener(isConnected ? v -> {
             Intent intent = new Intent(context, DexClientViewActivity.class);
             intent.putExtra("dexHost", item);
             context.startActivity(intent);
-        });
+        } : null);
 
         holder.itemView.setOnLongClickListener(v -> {
             v.showContextMenu();

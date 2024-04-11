@@ -70,13 +70,11 @@ public class GeckoViewHelper {
 
     private Boolean isAboutBlankLoading = false;
     private Boolean isAboutBlankLoaded = false;
-    private int initialProgress;
 
     // setProgressBar attaches a ProgressBar to a GeckoSession
     public void setProgressBar(GeckoSession session, ProgressBar progressBar) {
 
         // Store the initial progress value. This is needed to calculate the overall progress
-        initialProgress = progressBar.getProgress();
         session.setProgressDelegate(new GeckoSession.ProgressDelegate() {
             @Override
             public void onPageStart(@NonNull GeckoSession session, @NonNull String url) {
@@ -104,16 +102,9 @@ public class GeckoViewHelper {
                 if (isAboutBlankLoading || !isAboutBlankLoaded) {
                     return;
                 }
-                int overAllProgress = calculateOverallProgress(initialProgress, progress);
-                progressBar.setProgress(overAllProgress, true);
+                progressBar.setProgress(progress, true);
             }
         });
-    }
-
-    private int calculateOverallProgress(int initialProgress, int progress) {
-        // calculate overall progress
-        double pct = (double) (initialProgress + progress) / (100 + initialProgress);
-        return (int) Math.round(pct * 100);
     }
 
     private GeckoRuntimeSettings.Builder createSettingsBuilder(File filesDir) {
