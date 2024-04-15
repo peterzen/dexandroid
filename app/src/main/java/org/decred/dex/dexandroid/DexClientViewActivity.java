@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+//import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoRuntime;
@@ -35,11 +35,15 @@ public class DexClientViewActivity extends Activity {
 
         GeckoSession session = new GeckoSession();
 
-        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            session.reload();
-            swipeRefreshLayout.setRefreshing(false);
-        });
+        // This implements a swipe to refresh action on the web view.
+        // TODO decide whether it is really needed - it conflicts with the scrolling in the Markets
+        // view as it currently is.  The refresh action is useful for development really so might
+        // not be useful in production.
+//        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            session.reload();
+//            swipeRefreshLayout.setRefreshing(false);
+//        });
 
         // Workaround for Bug 1758212
         session.setContentDelegate(new GeckoSession.ContentDelegate() {
